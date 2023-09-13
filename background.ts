@@ -150,15 +150,25 @@ export const updateStorage = async () => {
     throw new Error("Error generating random problem")
   } else {
     const { randomProblemURL, randomProblemName } = result
+    const problemURL = await storage.set("problemURL", randomProblemURL)
+    const problemName = await storage.set("problemName", randomProblemName)
+    const difficulty = await storage.get("difficulty")
     console.log(
       "Random problem generated:",
       randomProblemName,
-      randomProblemURL
+      randomProblemURL,
+      difficulty
     )
     leetcodeProblemSolved = false
     leetCodeProblem = { url: randomProblemURL, name: randomProblemName }
-    await storage.set("problemURL", randomProblemURL)
-    await storage.set("problemName", randomProblemName)
+    if(!problemURL.has(difficulty)) {
+      problemURL.set(difficulty, randomProblemURL)
+    }
+    if(!problemName.has(difficulty)) {
+      problemName.set(difficulty, randomProblemName)
+    }
+    await storage.set("problemURL", problemURL)
+    await storage.set("problemName", problemName)
     await storage.set("problemDate", new Date().toDateString())
     await storage.set("leetCodeProblemSolved", false)
 

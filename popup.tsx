@@ -23,12 +23,13 @@ const IndexPopup = () => {
   ]
   const [randomUnsolvedMessage, setRandomUnsolvedMessage] = useState("")
   const [randomSolvedMessage, setRandomSolvedMessage] = useState("")
-  const [problemName] = useStorage<string>("problemName")
-  const [problemURL] = useStorage<string>("problemURL")
+  const [problemName] = useStorage<Map<string, string>>("problemName")
+  const [problemURL] = useStorage<Map<string, string>>("problemURL")
   const [leetcodeProblemSolved] = useStorage<boolean>("leetCodeProblemSolved")
   const [currentStreak] = useStorage<number>("currentStreak")
   const [bestStreak] = useStorage<number>("bestStreak")
   const [drawerClosed, setDrawerClosed] = useState(true)
+  const [difficulty] = useStorage<number>("difficulty")
   
   useEffect(() => {
     const randomUnsolvedIndex = Math.floor(
@@ -55,10 +56,10 @@ const IndexPopup = () => {
 
           <div className="leetcode-info">
             <p className="question-of-day-msg">Today's Question</p>
-            <p id="leetcode-problem-name">{problemName}</p>
+            <p id="leetcode-problem-name">{problemName.get(difficulty)}</p>
             <button
               id="leetcode-problem-button"
-              onClick={() => chrome.tabs.create({ url: problemURL })}>
+              onClick={() => chrome.tabs.create({ url: problemURL.get(difficulty) })}>
               Solve it
             </button>
           </div>
